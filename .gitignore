@@ -40,6 +40,6 @@ app-example
 
 firebase.ts
 
-# generated native folders
+# generated native folders 
 /ios
 /android
