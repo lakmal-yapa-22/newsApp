@@ -236,7 +236,7 @@ const Signup = () => {
                 <View className="justify-center items-center mr-4 w-8 h-8 bg-red-100 rounded-full">
                   <Text className="font-extrabold text-red-600">✓</Text>
                 </View>
-                <Text className="flex-1 text-neutral-700">Personalized local & global news feed</Text>
+                <Text className="flex-1 text-neutral-700"> Personalized local & global news feed </Text>
               </View>
 
               <View className="flex-row items-center">

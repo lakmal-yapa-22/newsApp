@@ -14,8 +14,8 @@ const AuthLayout = () => {
       name="login" 
       options={{ title: 'Login' }}
       />
-      <Stack.Screen name="register"
-       options={{ title: 'SignUp Page' }} />
+      <Stack.Screen name=" register "
+       options={{ title: ' SignUp Page ' }} />
     </Stack>
   );
 };
