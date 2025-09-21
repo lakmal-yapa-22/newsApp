@@ -1,12 +1,12 @@
 import {
-  ArrowLeft, Heart, Share2, User,
-  Pencil, Trash2
+  ArrowLeft, Heart, Share2, User, Pencil, Trash2
 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   Alert, ScrollView, Text, TextInput,
   TouchableOpacity, View
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { NewsArticle } from "@/types/news";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -36,10 +36,8 @@ const NewsDetails = () => {
   const [liked, setLiked] = useState(false);
   const [comments, setCommentsState] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-
-  // edit state per comment
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingText, setEditingText] = useState<string>("");
+  const [editingText, setEditingText] = useState("");
 
   const load = async () => {
     if (!id) return;
@@ -61,7 +59,6 @@ const NewsDetails = () => {
 
   const canEditNews = user?.uid && article?.authorId === user.uid;
 
-  // Likes
   const onToggleLike = async () => {
     if (!user || !article) return;
     const res = await toggleLike(article.id!, user.uid);
@@ -69,7 +66,6 @@ const NewsDetails = () => {
     await load();
   };
 
-  // Comments - add
   const onAddComment = async () => {
     if (!user || !article || !newComment.trim()) return;
     await addComment(
@@ -83,12 +79,11 @@ const NewsDetails = () => {
     setCommentsState(list as any);
   };
 
-  // Comments - start edit
   const startEdit = (c: Comment) => {
     setEditingId(c.id);
     setEditingText(c.text);
   };
-  // Comments - save edit
+
   const saveEdit = async () => {
     if (!article || !editingId || !editingText.trim()) return;
     await updateComment(article.id!, editingId, editingText.trim());
@@ -97,12 +92,12 @@ const NewsDetails = () => {
     const list = await getComments(article.id!);
     setCommentsState(list as any);
   };
-  // Comments - cancel edit
+
   const cancelEdit = () => {
     setEditingId(null);
     setEditingText("");
   };
-  // Comments - delete
+
   const onDeleteComment = async (cid: string) => {
     if (!article) return;
     Alert.alert("Delete comment?", "This cannot be undone.", [
@@ -119,7 +114,6 @@ const NewsDetails = () => {
     ]);
   };
 
-  // News - delete
   const onDeleteNews = async () => {
     if (!article) return;
     Alert.alert("Delete article?", "This cannot be undone.", [
@@ -140,8 +134,11 @@ const NewsDetails = () => {
 
   return (
     <View className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row justify-between items-center px-4 pt-12 pb-4 bg-black">
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={["#1E40AF", "#3B82F6"]}
+        className="flex-row justify-between items-center px-4 pt-12 pb-4"
+      >
         <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2">
           <ArrowLeft size={24} color="white" />
         </TouchableOpacity>
@@ -149,7 +146,7 @@ const NewsDetails = () => {
           {canEditNews && (
             <>
               <TouchableOpacity
-                className="p-2 rounded-full bg-neutral-800"
+                className="p-2 rounded-full bg-white/20"
                 onPress={() =>
                   router.push({ pathname: "/news", params: { id: article.id! } })
                 }
@@ -157,7 +154,7 @@ const NewsDetails = () => {
                 <Pencil size={22} color="white" />
               </TouchableOpacity>
               <TouchableOpacity
-                className="p-2 rounded-full bg-neutral-800"
+                className="p-2 rounded-full bg-white/20"
                 onPress={onDeleteNews}
               >
                 <Trash2 size={22} color="white" />
@@ -165,36 +162,39 @@ const NewsDetails = () => {
             </>
           )}
           <TouchableOpacity
-            className="p-2 rounded-full bg-neutral-800"
+            className="p-2 rounded-full bg-white/20"
             onPress={onToggleLike}
           >
             <Heart size={22} color="white" fill={liked ? "#ef4444" : "none"} />
           </TouchableOpacity>
-          <TouchableOpacity className="p-2 rounded-full bg-neutral-800">
+          <TouchableOpacity className="p-2 rounded-full bg-white/20">
             <Share2 size={22} color="white" />
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
 
       {/* Content */}
       <ScrollView className="flex-1 px-4 py-6">
-        <Text className="mb-2 text-2xl font-bold text-gray-900">
-          {article.title}
-        </Text>
-        <View className="flex-row items-center mb-2">
-          <User size={16} color="#6b7280" />
-          <Text className="ml-2 font-medium text-gray-700">
-            {article.authorName}
+        <View className="p-5 mb-6 bg-white rounded-2xl shadow-md">
+          <Text className="mb-2 text-2xl font-bold text-gray-900">
+            {article.title}
           </Text>
-        </View>
-        <Text className="mb-6 text-base leading-6 text-gray-700">
-          {article.body}
-        </Text>
+          <View className="flex-row items-center mb-2">
+            <User size={16} color="#6b7280" />
+            <Text className="ml-2 font-medium text-gray-700">
+              {article.authorName}
+            </Text>
+          </View>
+          <Text className="mb-6 text-base leading-6 text-gray-700">
+            {article.body}
+          </Text>
 
-        <View className="flex-row gap-6 mb-8">
-          <Text>❤️ {article.likesCount}</Text>
-          <Text>💬 {article.commentsCount}</Text>
-          <Text>👀 {article.viewsCount}</Text>
+          {/* Stats */}
+          <View className="flex-row justify-around pt-4 border-t">
+            <Text className="text-gray-600">❤️ {article.likesCount}</Text>
+            <Text className="text-gray-600">💬 {article.commentsCount}</Text>
+            <Text className="text-gray-600">👀 {article.viewsCount}</Text>
+          </View>
         </View>
 
         {/* Comments */}
@@ -207,12 +207,15 @@ const NewsDetails = () => {
               onChangeText={setNewComment}
               placeholder="Write a comment..."
               className="p-3 mb-2 bg-gray-100 rounded-xl border border-gray-300"
+              multiline
             />
             <TouchableOpacity
               onPress={onAddComment}
               className="py-3 bg-red-600 rounded-xl"
             >
-              <Text className="text-center text-white">Post Comment</Text>
+              <Text className="font-semibold text-center text-white">
+                Post Comment
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -222,8 +225,13 @@ const NewsDetails = () => {
           const editing = editingId === c.id;
 
           return (
-            <View key={c.id} className="p-3 mb-3 bg-gray-50 rounded-lg border">
-              <Text className="mb-1 font-semibold">{c.authorName}</Text>
+            <View
+              key={c.id}
+              className="p-4 mb-3 bg-gray-50 rounded-xl border shadow-sm"
+            >
+              <Text className="mb-1 font-semibold text-gray-900">
+                {c.authorName}
+              </Text>
 
               {editing ? (
                 <>
@@ -255,7 +263,7 @@ const NewsDetails = () => {
               {mine && !editing && (
                 <View className="flex-row gap-4 mt-2">
                   <TouchableOpacity onPress={() => startEdit(c)}>
-                    <Text className="font-medium text-red-600">Edit</Text>
+                    <Text className="font-medium text-blue-600">Edit</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => onDeleteComment(c.id)}>
                     <Text className="font-medium text-red-600">Delete</Text>

@@ -1,21 +1,41 @@
-import React from 'react'
+import React from "react";
 import { Stack } from "expo-router";
 
 const AuthLayout = () => {
   return (
-    <Stack screenOptions={{
-      headerShown: true,
-      contentStyle: { backgroundColor: 'white' },
-      animation: 'slide_from_right',
-      headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#1E40AF' },
-      headerTintColor: '#1E40AF',
-    }}>
-      <Stack.Screen 
-      name="login" 
-      options={{ title: 'Login' }}
+    <Stack
+      screenOptions={{
+        headerShown: true,
+        contentStyle: { backgroundColor: "#F9FAFB" }, // light neutral bg
+        animation: "slide_from_right",
+        headerStyle: {
+          backgroundColor: "#1E40AF", // deep blue header
+         
+       
+        },
+        headerTitleStyle: {
+          fontSize: 22,
+          fontWeight: "700",
+          color: "#FFFFFF", // white text
+        
+        },
+        headerTintColor: "#FFFFFF", // back button color
+      }}
+    >
+      <Stack.Screen
+        name="login"
+        options={{
+          title: "Login",
+          headerTitleAlign: "center",
+        }}
       />
-      <Stack.Screen name=" register "
-       options={{ title: ' SignUp Page ' }} />
+      <Stack.Screen
+        name="register"
+        options={{
+          title: "Sign Up",
+          headerTitleAlign: "center",
+        }}
+      />
     </Stack>
   );
 };
