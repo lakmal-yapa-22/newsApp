@@ -38,7 +38,7 @@ yarn-error.*
 
 app-example
 
-firebase.ts
+
 
 # generated native folders 
 /ios
