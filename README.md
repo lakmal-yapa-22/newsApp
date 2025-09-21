@@ -196,7 +196,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Lakmal Yapa**
 - 🔗 GitHub: [@lakmal-yapa-22](https://github.com/lakmal-yapa-22)
 - 📧 Email: [your.email@example.com](mailto:lakmal2001yapa@gmail.com)
-- 💼 LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/lakmal-kumarasiri-0a4486319/)
+- 💼 LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/lakmal-kumarasiri-0a4486319)
 
 ---
 
