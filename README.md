@@ -4,6 +4,7 @@ A modern mobile news application built with **React Native** + **Expo Router**.
 Users can read, search, like, and comment on news articles. Admin users can also publish, edit, and delete articles with multi-language support.
 
 [![Download APK](https://img.shields.io/badge/Download-APK-blue?style=for-the-badge&logo=android)](https://drive.google.com/file/d/1TcYrKnJAALpIN3CAnuPL6CNhqT1-v8bD/view?usp=drive_link)
+[![Watch Demo](https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/mNsYBq-VdRE?si=K5g60xYnBTMmxqfq)
 
 ---
 
@@ -121,6 +122,11 @@ npx expo start --web
 
 ## 📱 Download & Test
 
+### 🎥 **Demo Video**
+Watch the complete app walkthrough and features demonstration:
+
+**[🎬 Watch NewsApp Demo on YouTube](https://youtu.be/mNsYBq-VdRE?si=K5g60xYnBTMmxqfq)**
+
 ### 📦 **Pre-built APK**
 You can directly download and install the latest APK build:
 
@@ -194,9 +200,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## 👨‍💻 Author
 
 **Lakmal Yapa**
-- 🔗 GitHub: [Lakmal Kumarasiri](https://github.com/lakmal-yapa-22)
-- 📧 Email: [lakmal2001yapa@gmail.com](mailto:lakmal2001yapa@gmail.com)
-- 💼 LinkedIn: [Lakmal Kumarasiri](https://www.linkedin.com/in/lakmal-kumarasiri-0a4486319)
+- 🔗 GitHub: [@lakmal-yapa-22](https://github.com/lakmal-yapa-22)
+- 📧 Email: [your.email@example.com](mailto:your.email@example.com)
+- 💼 LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
 
 ---
 
@@ -224,5 +230,3 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **⭐ Star this repository if you found it helpful! ⭐**
 
 *Built with ❤️ using React Native & Expo*
-
-</div>
