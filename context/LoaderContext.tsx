@@ -1,29 +1,21 @@
-import React, { createContext, useContext, useState, ReactNode } from "react"
-import Loader from "../components/Loader"
+import React, { createContext, useContext, useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
 
-interface LoaderContextType {
-  showLoader: () => void
-  hideLoader: () => void
-}
+type LoaderCtx = { show: ()=>void; hide: ()=>void; };
+const Ctx = createContext<LoaderCtx>({ show:()=>{}, hide:()=>{} });
 
-const LoaderContext = createContext<LoaderContextType | undefined>(undefined)
-
-export const LoaderProvider = ({ children }: { children: ReactNode }) => {
-  const [visible, setVisible] = useState(false) 
-
-  const showLoader = () => setVisible(true)
-  const hideLoader = () => setVisible(false)
-
+export const LoaderProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const [loading, setLoading] = useState(false);
   return (
-    <LoaderContext.Provider value={{ showLoader, hideLoader }}>
+    <Ctx.Provider value={{ show:()=>setLoading(true), hide:()=>setLoading(false) }}>
       {children}
-      <Loader visible={visible} />
-    </LoaderContext.Provider>
-  )
-}
+      {loading && (
+        <View className="absolute inset-0 justify-center items-center bg-black/20">
+          <ActivityIndicator size="large" color="#dc2626" />
+        </View>
+      )}
+    </Ctx.Provider>
+  );
+};
 
-export const useLoader = () => {
-  const context = useContext(LoaderContext)
-  if (!context) throw new Error("useLoader must be used within LoaderProvider")
-  return context
-}
+export const useLoader = () => useContext(Ctx);

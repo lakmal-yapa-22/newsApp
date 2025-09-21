@@ -1,18 +1,10 @@
-import React from "react"
-import { View, ActivityIndicator } from "react-native"
+import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 
-interface LoaderProps {
-  visible: boolean
-}
-
-const Loader: React.FC<LoaderProps> = ({ visible }) => {
-  if (!visible) return null
-
+export default function Loader(){
   return (
-    <View className="absolute inset-0 bg-black/50 items-center justify-center z-50">
-      <ActivityIndicator size="large" color="#fff" />
+    <View className="absolute inset-0 justify-center items-center bg-black/20">
+      <ActivityIndicator size="large" color="#dc2626" />
     </View>
-  )
+  );
 }
-
-export default Loader

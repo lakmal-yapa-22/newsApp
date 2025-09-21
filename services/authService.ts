@@ -1,29 +1,42 @@
-import {auth} from "@/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { app } from "@/firebase";
+// services/authService.ts
+import { auth, db } from "@/firebase";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { RegisterForm, UserProfile } from "@/types/users";
 
-const db = getFirestore(app);
+const usersRef = collection(db, "users");
 
-export const Register = async (email: string, password: string, name: string, location: string) => {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
+export async function registerAndCreateProfile(form: RegisterForm) {
+  // 1) create auth user
+  const cred = await createUserWithEmailAndPassword(auth, form.email, form.password);
 
-  // Save extra user details in Firestore
-  await setDoc(doc(db, "users", user.uid), {
-    name,
-    email,
-    location,
-    
+  // 2) update displayName (so app can show author's name)
+  await updateProfile(cred.user, { displayName: form.name });
+
+  // 3) save public profile in Firestore (❌ no password!)
+  const profile: UserProfile = {
+    uid: cred.user.uid,
+    name: form.name,
+    email: form.email,
+    location: form.location,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+  await setDoc(doc(usersRef, cred.user.uid), {
+    ...profile,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   });
 
-  return user;
-};
+  return cred.user;
+}
 
-export const login = (email: string, password: string) => {
-  return signInWithEmailAndPassword(auth, email, password);
-};
+export const loginWithEmail = (email: string, password: string) =>
+  signInWithEmailAndPassword(auth, email, password);
 
-export const Logout = () => {
-  return signOut(auth);
-};
+export const logout = () => signOut(auth);

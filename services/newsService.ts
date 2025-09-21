@@ -1,15 +1,14 @@
-import { db } from "@/firebase";
-import { NewsArticle } from "@/types/news";
+import { db } from '@/firebase';
+import { NewsArticle } from '@/types/news';
 import {
   addDoc, collection, deleteDoc, doc, getDoc, getDocs,
   orderBy, query, updateDoc, increment, setDoc
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
-export const newsRef = collection(db, "news");
+export const newsRef = collection(db, 'news');
 
-/** Create */
 export const createNews = async (
-  article: Omit<NewsArticle, "id" | "createdAt" | "updatedAt">
+  article: Omit<NewsArticle, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<string> => {
   const payload: NewsArticle = {
     ...article,
@@ -26,74 +25,66 @@ export const createNews = async (
   return ref.id;
 };
 
-/** Update */
 export const updateNews = async (id: string, article: Partial<NewsArticle>) => {
-  const ref = doc(db, "news", id);
+  const ref = doc(db, 'news', id);
   await updateDoc(ref, { ...article, updatedAt: Date.now() } as any);
 };
 
-/** Delete */
 export const deleteNews = async (id: string) => {
-  await deleteDoc(doc(db, "news", id));
+  await deleteDoc(doc(db, 'news', id));
 };
 
-/** Get one (and bump views) */
 export const getNewsById = async (id: string): Promise<NewsArticle | null> => {
-  const ref = doc(db, "news", id);
+  const ref = doc(db, 'news', id);
   const snap = await getDoc(ref);
   if (!snap.exists()) return null;
 
-  const data = snap.data() as Partial<NewsArticle>;
-  const article: NewsArticle = {
+  const d = snap.data() as Partial<NewsArticle>;
+  const a: NewsArticle = {
     id: snap.id,
-    title: data.title || "",
-    body: data.body || "",
-    category: (data.category as NewsArticle["category"]) || "General",
-    authorId: data.authorId || "unknown",
-    authorName: data.authorName || "Anonymous",
-    createdAt: data.createdAt || Date.now(),
-    updatedAt: data.updatedAt || Date.now(),
-    isPublished: data.isPublished ?? true,
-    location: data.location,
-    tags: data.tags ?? [],
-    likesCount: data.likesCount ?? 0,
-    commentsCount: data.commentsCount ?? 0,
-    viewsCount: data.viewsCount ?? 0,
-    isFeatured: data.isFeatured ?? false,
-    priority: data.priority ?? 0,
-    language: data.language ?? "EN",
+    title: d.title || '',
+    body: d.body || '',
+    category: (d.category as any) || 'General',
+    authorId: d.authorId || 'unknown',
+    authorName: d.authorName || 'Anonymous',
+    createdAt: d.createdAt || Date.now(),
+    updatedAt: d.updatedAt || Date.now(),
+    isPublished: d.isPublished ?? true,
+    location: d.location,
+    tags: d.tags ?? [],
+    likesCount: d.likesCount ?? 0,
+    commentsCount: d.commentsCount ?? 0,
+    viewsCount: d.viewsCount ?? 0,
+    isFeatured: d.isFeatured ?? false,
+    priority: d.priority ?? 0,
+    language: d.language ?? 'EN',
   };
 
-  // bump views
   await updateDoc(ref, { viewsCount: increment(1) });
-  return article;
+  return a;
 };
 
-/** List (latest first) */
 export const getNewsList = async (): Promise<NewsArticle[]> => {
-  const q = query(newsRef, orderBy("createdAt", "desc"));
+  const q = query(newsRef, orderBy('createdAt', 'desc'));
   const snaps = await getDocs(q);
   return snaps.docs.map(d => ({ id: d.id, ...(d.data() as any) })) as NewsArticle[];
 };
 
-/** Like toggle */
 export const toggleLike = async (newsId: string, userId: string) => {
-  const likeRef = doc(db, "news", newsId, "likes", userId);
+  const likeRef = doc(db, 'news', newsId, 'likes', userId);
   const snap = await getDoc(likeRef);
-
   if (snap.exists()) {
     await deleteDoc(likeRef);
-    await updateDoc(doc(db, "news", newsId), { likesCount: increment(-1) });
+    await updateDoc(doc(db, 'news', newsId), { likesCount: increment(-1) });
     return false;
-  } else {
-    await setDoc(likeRef, { userId, createdAt: Date.now() });
-    await updateDoc(doc(db, "news", newsId), { likesCount: increment(1) });
-    return true;
   }
+  await setDoc(likeRef, { userId, createdAt: Date.now() });
+  await updateDoc(doc(db, 'news', newsId), { likesCount: increment(1) });
+  return true;
 };
 
 export const hasUserLiked = async (newsId: string, userId: string) => {
-  const likeRef = doc(db, "news", newsId, "likes", userId);
+  const likeRef = doc(db, 'news', newsId, 'likes', userId);
   const snap = await getDoc(likeRef);
   return snap.exists();
 };

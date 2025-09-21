@@ -1,32 +1,22 @@
-import React from "react";
-import { Tabs } from "expo-router/tabs";
-import Entypo from "@expo/vector-icons/Entypo";
+import React from 'react';
+import { Tabs } from 'expo-router/tabs';
+import Entypo from '@expo/vector-icons/Entypo';
 
-type EntypoIconName = "home" | "plus" | "user";
+const tabs = [
+  { label: 'Home', name: 'home', icon: 'home' },
+  { label: 'News', name: 'news', icon: 'plus' },
+ 
+] as const;
 
-const tabs: { label: string; name: string; icon: EntypoIconName }[] = [
-  { label: "Home",   name: "home",   icon: "home" },
-  { label: "News",   name: "news",   icon: "plus" },
-  { label: "Profile",name: "profile",icon: "user" },
-];
-
-const DashboardLayout = () => {
+export default function DashboardLayout(){
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      {tabs.map((tab) => (
-        <Tabs.Screen
-          key={tab.name}
-          name={tab.name}
-          options={{
-            title: tab.label,
-            tabBarIcon: ({ color, size }) => (
-              <Entypo name={tab.icon} size={size} color={color} />
-            ),
-          }}
-        />
+    <Tabs screenOptions={{ headerShown:false }}>
+      {tabs.map(t => (
+        <Tabs.Screen key={t.name} name={t.name} options={{
+          title: t.label,
+          tabBarIcon: ({ color, size }) => (<Entypo name={t.icon as any} size={size} color={color} />)
+        }} />
       ))}
     </Tabs>
   );
-};
-
-export default DashboardLayout;
+}

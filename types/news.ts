@@ -3,14 +3,12 @@ export interface NewsArticle {
   title: string;
   body: string;
   category: "General" | "Sports" | "Business" | "Tech" | "Entertainment" | "Local";
-
   authorId: string;
   authorName: string;
   createdAt: number;
   updatedAt: number;
   isPublished: boolean;
-
-  // Extra fields
+  // Extra
   location?: string;
   tags: string[];
   likesCount: number;

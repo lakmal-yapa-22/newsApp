@@ -1,49 +1,49 @@
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { auth } from "../firebase";
+// context/authContext.tsx
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
+import { loginWithEmail, logout as doLogout, registerAndCreateProfile } from "@/services/authService";
 
-// context type
-type AuthContextType = {
-  user: User | null;
-  loading: boolean;
-  logout: () => Promise<void>;   // ✅ logout added
+type AuthCtx = {
+  user: any;
+  login: (email: string, password: string) => Promise<void>;
+  register: (form: { name: string; email: string; password: string; location: string }) => Promise<void>;
+  logout: () => Promise<void>;
 };
 
-// default context
-const AuthContext = createContext<AuthContextType>({
+const Ctx = createContext<AuthCtx>({
   user: null,
-  loading: true,
+  login: async () => {},
+  register: async () => {},
   logout: async () => {},
 });
 
-const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser ?? null);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    const unsub = onAuthStateChanged(auth, setUser);
+    return unsub;
   }, []);
 
-  // ✅ logout function
-  const logout = async () => {
-    await signOut(auth);
-    setUser(null);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <Ctx.Provider
+      value={{
+        user,
+        login: async (email, password) => {
+          await loginWithEmail(email, password);
+        },
+        register: async (form) => {
+          await registerAndCreateProfile(form);
+        },
+        logout: async () => {
+          await doLogout();
+        },
+      }}
+    >
       {children}
-    </AuthContext.Provider>
+    </Ctx.Provider>
   );
 };
 
-const useAuth = () => {
-  return useContext(AuthContext);
-};
-
-export { AuthProvider, useAuth };
+export const useAuth = () => useContext(Ctx);
