@@ -99,22 +99,18 @@ export default function NewsDetails() {
     setComments(await getComments(article.id!));
   };
 
-  const onDeleteComment = async (cid: string) => {
-    if (!article) return;
-    confirmAlert("Delete comment?", "This cannot be undone.", async () => {
-      await deleteComment(article.id!, cid);
-      setComments(await getComments(article.id!));
-    });
-  };
+const onDeleteComment = async (cid: string) => {
+  if (!article) return;
+  await deleteComment(article.id!, cid);
+  setComments(await getComments(article.id!));
+};
 
-  const onDeleteNews = async () => {
-    if (!article) return;
-    confirmAlert("Delete article?", "This cannot be undone.", async () => {
-      await deleteNews(article.id!);
-      showAlert("Deleted", "Article removed");
-      router.replace("/home");
-    });
-  };
+const onDeleteNews = async () => {
+  if (!article) return;
+  await deleteNews(article.id!);
+  router.replace("/home");
+};
+
 
   if (!article) return <Text className="p-4">Loading...</Text>;
 

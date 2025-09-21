@@ -15,7 +15,7 @@ import {
   deleteNews,
 } from '@/services/newsService';
 import { NewsArticle } from '@/types/news';
-import { confirmAlert, showAlert } from '@/utils/alert';
+
 
 const categories: NewsArticle['category'][] = [
   'General',
@@ -57,7 +57,7 @@ export default function AddOrEditNewsScreen() {
 
   const handleSubmit = async () => {
     if (!title || !body) {
-      showAlert('Error', 'Please fill all required fields');
+     
       return;
     }
     setSaving(true);
@@ -79,7 +79,7 @@ export default function AddOrEditNewsScreen() {
       };
       if (isEdit && id) {
         await updateNews(id, payload as any);
-        showAlert('Updated', 'Article updated successfully');
+     
         router.replace(`/home/${id}`);
       } else {
         const newId = await createNews({
@@ -93,28 +93,26 @@ export default function AddOrEditNewsScreen() {
           isFeatured: false,
           priority: 0,
         });
-        showAlert('Published', 'Article created successfully');
+    
         router.replace(`/home/${newId}`);
       }
     } catch (e: any) {
-      showAlert('Error', e.message || 'Failed to save');
+ 
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async () => {
-    if (!id) return;
-    confirmAlert('Delete?', 'This cannot be undone.', async () => {
-      try {
-        await deleteNews(id);
-        showAlert('Deleted', 'Article removed successfully');
-        router.replace('/home');
-      } catch (e: any) {
-        showAlert('Error', e.message || 'Failed to delete');
-      }
-    });
-  };
+const handleDelete = async () => {
+  if (!id) return;
+  try {
+    await deleteNews(id);
+    router.replace('/home'); // delete una gaman home ekata yanawa
+  } catch (e: any) {
+    console.error("Failed to delete:", e.message);
+  }
+};
+
 
   return (
     <ScrollView className="flex-1 px-5 py-6 bg-white">
